@@ -4,14 +4,13 @@ Health Data Collector
 Continuously collects smartwatch data.
 """
 
-
+from src.storage.csv_storage import save_health_data
 import asyncio
 
 from datetime import datetime
 
 from src.ble.connection import WatchConnection
 from src.ble.battery import get_battery
-
 
 COLLECT_INTERVAL = 5
 
@@ -65,6 +64,9 @@ async def collect_data():
                 health_data
             )
 
+            save_health_data(
+                health_data
+            )
 
             await asyncio.sleep(
                 COLLECT_INTERVAL
