@@ -13,3 +13,6 @@ data/*.csv
 
 # Environment variables
 .env
+
+# Collected health data
+data/*.csv

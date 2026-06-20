@@ -11,7 +11,7 @@ from datetime import datetime
 
 from src.ble.connection import WatchConnection
 from src.ble.battery import get_battery
-
+from src.ble.heart_rate import get_heart_rate
 
 COLLECT_INTERVAL = 5
 
@@ -41,7 +41,10 @@ async def collect_data():
             battery = await get_battery(
                 watch.client
             )
-
+            
+            heart_rate = await get_heart_rate(
+                watch.client
+            )
 
             health_data = {
 
@@ -52,7 +55,7 @@ async def collect_data():
 
                 "battery": battery,
 
-                "heart_rate": None,
+                "heart_rate": heart_rate,
 
                 "steps": None,
 
