@@ -1,7 +1,5 @@
 """
-Health Data Collector
-
-Collects health data from providers.
+Continuous Health Collector
 """
 
 
@@ -20,25 +18,52 @@ async def main():
     provider = BLEHealthProvider()
 
 
-    while True:
+    try:
 
 
-        data = await provider.get_health_data()
+        await provider.connect()
 
 
         print(
-            data
+            "Starting continuous collection..."
         )
 
 
-        save_health_data(
-            data
+        while True:
+
+
+            data = await provider.get_health_data()
+
+
+            print(
+                data
+            )
+
+
+            save_health_data(
+                data
+            )
+
+
+            await asyncio.sleep(
+                10
+            )
+
+
+
+    except KeyboardInterrupt:
+
+
+        print(
+            "Stopping collector..."
         )
 
 
-        await asyncio.sleep(
-            10
-        )
+
+    finally:
+
+
+        await provider.disconnect()
 
 
 

@@ -1,7 +1,7 @@
 """
 BLE Health Provider
 
-Gets available real data directly from Amazfit.
+Maintains continuous Amazfit connection.
 """
 
 
@@ -19,48 +19,45 @@ from src.ble.battery import get_battery
 class BLEHealthProvider(HealthProvider):
 
 
+    def __init__(self):
+
+        self.watch = WatchConnection()
+
+
+
+    async def connect(self):
+
+        await self.watch.connect()
+
+
+
+    async def disconnect(self):
+
+        await self.watch.disconnect()
+
+
+
     async def get_health_data(self):
 
 
-        watch = WatchConnection()
+        battery = await get_battery(
+            self.watch.client
+        )
 
 
-        try:
+        return {
 
+            "timestamp": datetime.now()
+            .strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
 
-            await watch.connect()
+            "battery": battery,
 
+            "heart_rate": None,
 
-            battery = await get_battery(
-                watch.client
-            )
+            "steps": None,
 
+            "spo2": None
 
-            return {
-
-
-                "timestamp": datetime.now()
-                .strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                ),
-
-
-                "battery": battery,
-
-
-                # coming from external provider later
-
-                "heart_rate": None,
-
-                "steps": None,
-
-                "spo2": None
-
-            }
-
-
-
-        finally:
-
-
-            await watch.disconnect()
+        }
